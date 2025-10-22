@@ -19,7 +19,7 @@ class JobListingController extends Controller
         $jobs = JobListing::when(
             !empty($tags),
             fn($q) => $q->whereHas('tags', fn($tag) => $tag->whereIn('name', $tags))
-        )->get();
+        )->orderBy('is_featured', 'desc')->get();
 
         return response()->json($jobs);
     }
