@@ -11,6 +11,8 @@ class Tag extends Model
     /** @use HasFactory<\Database\Factories\TagFactory> */
     use HasFactory;
 
+    protected $hidden = ['pivot'];
+
     public function listings(): BelongsToMany
     {
         return $this->belongsToMany(JobListing::class);

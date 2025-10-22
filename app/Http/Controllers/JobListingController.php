@@ -16,20 +16,11 @@ class JobListingController extends Controller
 
         $tags = $validated['tags'] ?? [];
 
-        if (empty($tags)) {
-            $jobs = JobListing::with('tags')->get();
+        $jobs = JobListing::when(
+            !empty($tags),
+            fn($q) => $q->whereHas('tags', fn($tag) => $tag->whereIn('name', $tags))
+        )->get();
 
-            return response()->json([
-                'jobs' => $jobs
-            ], 200);
-        }
-
-        $jobs = JobListing::with('tags')
-            ->whereHas('tags', fn($tag) => $tag->whereIn('name',  $tags))
-            ->get();
-
-        return response()->json([
-            'jobs' => $jobs
-        ], 200);
+        return response()->json($jobs);
     }
 }
